@@ -1,0 +1,26 @@
+name: Keep GitHub Active
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Runs daily at 9 AM UTC
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update activity log
+        run: |
+          echo "Activity log update: $(date)" >> activity_log.txt
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Bot"
+          git config --global user.email "bot@example.com"
+          git add activity_log.txt
+          git commit -m "Automated commit - keeping activity alive" || exit 0
+          git push
